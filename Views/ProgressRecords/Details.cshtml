@@ -1,0 +1,31 @@
+@model FitTrack.Models.ProgressRecord
+
+@{
+    ViewData["Title"] = "Progress Record Details";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <h1>Progress Record Details</h1>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-controller="Clients" asp-action="Details" asp-route-id="@Model.ClientId" class="btn btn-outline-success">View Client</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Progress</a>
+    </div>
+</div>
+
+<div class="details-card card">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Client)</dt>
+            <dd class="col-sm-8">@Model.Client?.FullName</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Weight)</dt>
+            <dd class="col-sm-8">@Model.Weight kg</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.BodyFatPercentage)</dt>
+            <dd class="col-sm-8">@Model.BodyFatPercentage%</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.RecordDate)</dt>
+            <dd class="col-sm-8">@Model.RecordDate.ToString("d")</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Notes)</dt>
+            <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Notes) ? "—" : Model.Notes)</dd>
+        </dl>
+    </div>
+</div>

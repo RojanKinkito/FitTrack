@@ -1,0 +1,70 @@
+@model IEnumerable<FitTrack.Models.ProgressRecord>
+
+@{
+    ViewData["Title"] = "Progress Tracking";
+    var selectedClientId = ViewData["SelectedClientId"] as int?;
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1>Progress Tracking</h1>
+        <p class="text-muted mb-0">Record and review client progress over time.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Record Progress</a>
+</div>
+
+<form asp-action="Index" method="get" class="filter-toolbar row g-2 mb-4">
+    <div class="col-sm-9 col-md-10">
+        <label for="clientId" class="visually-hidden">Filter by client</label>
+        <select id="clientId" name="clientId" asp-items="ViewBag.Clients" class="form-select">
+            <option value="">All clients</option>
+        </select>
+    </div>
+    <div class="col-sm-3 col-md-2 d-grid">
+        <button type="submit" class="btn btn-outline-primary">Filter</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="empty-state-panel" role="status">
+        No progress records were found. <a asp-action="Create" class="alert-link">Record the first update</a>.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table data-table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Client</th>
+                    <th>@Html.DisplayNameFor(model => model.Weight)</th>
+                    <th>@Html.DisplayNameFor(model => model.BodyFatPercentage)</th>
+                    <th>@Html.DisplayNameFor(model => model.RecordDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.Notes)</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr>
+                        <td>@record.Client?.FullName</td>
+                        <td>@record.Weight kg</td>
+                        <td>@record.BodyFatPercentage%</td>
+                        <td>@record.RecordDate.ToString("d")</td>
+                        <td class="text-break">@record.Notes</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@record.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <a asp-action="Edit" asp-route-id="@record.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@record.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

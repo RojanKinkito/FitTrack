@@ -1,0 +1,163 @@
+@model FitTrack.Models.Client
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Client Details";
+    var progressRecords = ViewBag.ProgressRecords as List<FitTrack.Models.ProgressRecord> ?? [];
+    var chartLabels = JsonSerializer.Serialize(progressRecords.Select(record => record.RecordDate.ToString("yyyy-MM-dd")));
+    var weightData = JsonSerializer.Serialize(progressRecords.Select(record => record.Weight));
+    var bodyFatData = JsonSerializer.Serialize(progressRecords.Select(record => record.BodyFatPercentage));
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <h1>Client Details</h1>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-controller="ProgressRecords" asp-action="Index" asp-route-clientId="@Model.Id" class="btn btn-outline-success">View Progress</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Clients</a>
+    </div>
+</div>
+
+<div class="details-card card">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FullName)</dt>
+            <dd class="col-sm-8">@Model.FullName</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Age)</dt>
+            <dd class="col-sm-8">@Model.Age</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Gender)</dt>
+            <dd class="col-sm-8">@Model.Gender</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Weight)</dt>
+            <dd class="col-sm-8">@Model.Weight kg</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Height)</dt>
+            <dd class="col-sm-8">@Model.Height cm</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FitnessGoal)</dt>
+            <dd class="col-sm-8">@Model.FitnessGoal</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DateJoined)</dt>
+            <dd class="col-sm-8">@Model.DateJoined.ToString("d")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="bmi-card mt-4">
+    <div>
+        <p class="section-kicker mb-1">BODY METRIC</p>
+        <h2 class="h5 mb-0">Body Mass Index</h2>
+        <p class="text-muted small mb-0">Calculated from weight and height.</p>
+    </div>
+    <div class="bmi-result">
+        <span class="bmi-value">@(Model.Bmi?.ToString("0.0") ?? "—")</span>
+        <span class="bmi-category">@Model.BmiCategory</span>
+    </div>
+</div>
+
+<section class="progress-chart-panel mt-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <p class="section-kicker mb-1">PROGRESS OVER TIME</p>
+            <h2 class="h4 mb-0">Progress charts</h2>
+        </div>
+        <a asp-controller="ProgressRecords" asp-action="Create" asp-route-clientId="@Model.Id" class="btn btn-sm btn-primary">Record Progress</a>
+    </div>
+
+    @if (progressRecords.Count == 0)
+    {
+        <div class="alert alert-info mb-0" role="alert">
+            No progress records are available for @Model.FullName yet. Record a progress update to see charts here.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h3 class="h6">Weight changes <span>(kg)</span></h3>
+                    <div class="chart-container">
+                        <canvas id="weightChart" aria-label="Weight changes over time"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <h3 class="h6">Body-fat changes <span>(%)</span></h3>
+                    <div class="chart-container">
+                        <canvas id="bodyFatChart" aria-label="Body-fat percentage changes over time"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+@if (progressRecords.Count > 0)
+{
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+        <script>
+            const chartLabels = @Html.Raw(chartLabels);
+            const weightData = @Html.Raw(weightData);
+            const bodyFatData = @Html.Raw(bodyFatData);
+            const chartGridColor = 'rgba(100, 120, 139, 0.15)';
+            const chartTextColor = '#64788b';
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: chartTextColor }
+                    },
+                    y: {
+                        beginAtZero: false,
+                        grid: { color: chartGridColor },
+                        ticks: { color: chartTextColor }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            };
+
+            new Chart(document.getElementById('weightChart'), {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Weight (kg)',
+                        data: weightData,
+                        borderColor: '#198754',
+                        backgroundColor: 'rgba(25, 135, 84, 0.12)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#198754',
+                        pointRadius: 4
+                    }]
+                },
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('bodyFatChart'), {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Body fat (%)',
+                        data: bodyFatData,
+                        borderColor: '#174d80',
+                        backgroundColor: 'rgba(23, 77, 128, 0.12)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#174d80',
+                        pointRadius: 4
+                    }]
+                },
+                options: chartOptions
+            });
+        </script>
+    }
+}

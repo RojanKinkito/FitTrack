@@ -1,0 +1,72 @@
+@model IEnumerable<FitTrack.Models.WorkoutProgram>
+
+@{
+    ViewData["Title"] = "Workout Programs";
+    var searchTerm = ViewData["SearchTerm"] as string;
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1>Workout Programs</h1>
+        <p class="text-muted mb-0">Create and manage structured programs for your clients.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Create Workout Program</a>
+</div>
+
+<form asp-action="Index" method="get" class="filter-toolbar row g-2 mb-4">
+    <div class="col-sm-9 col-md-10">
+        <label for="searchTerm" class="visually-hidden">Search programs</label>
+        <input id="searchTerm" name="searchTerm" value="@searchTerm" class="form-control" placeholder="Search by program or client name" />
+    </div>
+    <div class="col-sm-3 col-md-2 d-grid">
+        <button type="submit" class="btn btn-outline-primary">Search</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="empty-state-panel" role="status">
+        No workout programs were found. <a asp-action="Create" class="alert-link">Create a program</a>.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table data-table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ProgramName)</th>
+                    <th>Client</th>
+                    <th>@Html.DisplayNameFor(model => model.DifficultyLevel)</th>
+                    <th>@Html.DisplayNameFor(model => model.DurationWeeks)</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var program in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@program.ProgramName</strong>
+                            @if (!string.IsNullOrWhiteSpace(program.Description))
+                            {
+                                <small class="d-block text-muted">@program.Description</small>
+                            }
+                        </td>
+                        <td>@program.Client?.FullName</td>
+                        <td><span class="badge text-bg-success">@program.DifficultyLevel</span></td>
+                        <td>@program.DurationWeeks weeks</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@program.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                            <a asp-action="Edit" asp-route-id="@program.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@program.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

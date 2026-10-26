@@ -1,0 +1,79 @@
+@model FitTrack.Models.UserManagementViewModel
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <p class="section-kicker mb-1">ADMINISTRATION</p>
+        <h1>User Management</h1>
+        <p class="text-muted mb-0">Manage access roles for registered FitTrack users.</p>
+    </div>
+</div>
+
+@if (TempData["UserManagementError"] is string error)
+{
+    <div class="alert alert-warning" role="alert">@error</div>
+}
+
+<div class="table-responsive">
+    <table class="table data-table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Email</th>
+                <th>Current roles</th>
+                <th class="text-end">Role actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>
+                        @if (user.Roles.Count == 0)
+                        {
+                            <span class="text-muted">No roles</span>
+                        }
+                        else
+                        {
+                            foreach (var role in user.Roles)
+                            {
+                                <span class="badge text-bg-success me-1">@role</span>
+                            }
+                        }
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end flex-wrap gap-2">
+                            <form asp-action="UpdateRole" method="post">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <input type="hidden" name="role" value="Admin" />
+                                <input type="hidden" name="assign" value="true" />
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Add Admin</button>
+                            </form>
+                            <form asp-action="UpdateRole" method="post">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <input type="hidden" name="role" value="Admin" />
+                                <input type="hidden" name="assign" value="false" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Remove Admin</button>
+                            </form>
+                            <form asp-action="UpdateRole" method="post">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <input type="hidden" name="role" value="Trainer" />
+                                <input type="hidden" name="assign" value="true" />
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Add Trainer</button>
+                            </form>
+                            <form asp-action="UpdateRole" method="post">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <input type="hidden" name="role" value="Trainer" />
+                                <input type="hidden" name="assign" value="false" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Remove Trainer</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

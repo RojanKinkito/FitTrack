@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "FitTrack";
+}
+
+<div class="landing-shell">
+    <section class="landing-hero rounded-4 p-4 p-md-5 mb-5">
+        <video class="landing-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+            <source src="~/videos/BG.mp4" type="video/mp4" />
+        </video>
+        <div class="landing-video-overlay" aria-hidden="true"></div>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <p class="landing-eyebrow mb-3">FITNESS CLIENT MANAGEMENT</p>
+                <h1 class="display-3 fw-bold mb-3">Train smarter. <span class="landing-accent">Track progress.</span></h1>
+                <p class="lead mb-4">FitTrack keeps clients, workout programs, progress records, BMI insights, and trends organized in one focused workspace.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-success btn-lg">Go to Dashboard</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-success btn-lg">Login</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg">Register</a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="landing-visual" aria-label="FitTrack workspace preview">
+                    <div class="landing-visual-top"><span></span><span></span><span></span></div>
+                    <div class="landing-visual-grid">
+                        <div class="landing-visual-card landing-visual-card-wide"><small>CLIENT PROGRESS</small><strong>Steady momentum</strong><div class="landing-sparkline"><i></i><i></i><i></i><i></i><i></i></div></div>
+                        <div class="landing-visual-card"><small>PROGRAMS</small><strong>Organized</strong></div>
+                        <div class="landing-visual-card"><small>INSIGHTS</small><strong>Actionable</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="mb-5">
+        <div class="landing-heading mb-4">
+            <p class="landing-kicker">ONE CLEAR WORKSPACE</p>
+            <h2>Everything you need to coach with confidence</h2>
+            <p class="text-muted">Simple tools for managing the details that make a fitness plan personal and measurable.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-4"><article class="landing-feature-card h-100"><div class="landing-icon">01</div><h3>Client management</h3><p>Keep client profiles, goals, measurements, and join dates easy to find and maintain.</p></article></div>
+            <div class="col-md-6 col-xl-4"><article class="landing-feature-card h-100"><div class="landing-icon">02</div><h3>Workout programs</h3><p>Connect tailored programs to clients and keep difficulty and duration organized.</p></article></div>
+            <div class="col-md-6 col-xl-4"><article class="landing-feature-card h-100"><div class="landing-icon">03</div><h3>Progress tracking</h3><p>Record weight, body fat, dates, and notes so every milestone has context.</p></article></div>
+            <div class="col-md-6 col-xl-4"><article class="landing-feature-card h-100"><div class="landing-icon">04</div><h3>BMI calculation</h3><p>Turn height and weight into a clear BMI value and an easy-to-understand category.</p></article></div>
+            <div class="col-md-6 col-xl-4"><article class="landing-feature-card h-100"><div class="landing-icon">05</div><h3>Progress charts</h3><p>See weight and body-fat trends over time with responsive visual reports.</p></article></div>
+            <div class="col-md-6 col-xl-4"><article class="landing-feature-card h-100"><div class="landing-icon">06</div><h3>Secure authentication</h3><p>Use account-based access and role-aware permissions to protect your workspace.</p></article></div>
+        </div>
+    </section>
+
+    <section class="landing-how rounded-4 p-4 p-md-5 mb-5">
+        <div class="landing-heading mb-4"><p class="landing-kicker">HOW IT WORKS</p><h2>A focused flow from plan to progress</h2></div>
+        <div class="row g-4">
+            <div class="col-md-4"><div class="landing-step"><span>1</span><h3>Add a client</h3><p>Create a profile with goals, measurements, and the information your coaching relationship needs.</p></div></div>
+            <div class="col-md-4"><div class="landing-step"><span>2</span><h3>Create a workout program</h3><p>Assign a program with a difficulty level and duration that fits the client.</p></div></div>
+            <div class="col-md-4"><div class="landing-step"><span>3</span><h3>Track progress</h3><p>Record updates, review BMI, and use charts to guide the next conversation.</p></div></div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="landing-heading mb-4"><p class="landing-kicker">BUILT WITH</p><h2>Practical technology, thoughtfully connected</h2></div>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="tech-pill">ASP.NET Core MVC</span><span class="tech-pill">C#</span><span class="tech-pill">Entity Framework Core</span><span class="tech-pill">SQLite</span><span class="tech-pill">HTML, CSS, JavaScript</span><span class="tech-pill">Bootstrap</span><span class="tech-pill">Chart.js</span>
+        </div>
+    </section>
+
+    <section class="landing-portfolio rounded-4 p-4 p-md-5 mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8"><p class="landing-kicker">PORTFOLIO PROJECT</p><h2>A complete example of a modern MVC application</h2><p class="mb-0">FitTrack demonstrates CRUD operations, authentication, authorization, relational database design, server-side validation, client-side feedback, and data visualization in one cohesive fitness management experience.</p></div>
+            <div class="col-lg-4 text-lg-end"><a asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg">Start with FitTrack</a></div>
+        </div>
+    </section>
+</div>

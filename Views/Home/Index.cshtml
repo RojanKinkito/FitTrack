@@ -1,0 +1,126 @@
+@model FitTrack.Models.HomeDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard-shell app-page">
+    <section class="dashboard-hero rounded-4 p-4 p-md-5 mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="dashboard-eyebrow">FITTRACK DASHBOARD</span>
+                <h1 class="display-5 fw-bold mb-3">Build stronger habits,<br />one client at a time.</h1>
+                <p class="lead mb-0">Stay close to your clients, their goals, and the progress that keeps them moving forward.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="hero-mark" aria-hidden="true">↗</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="row g-3 mb-4" aria-label="Dashboard summary">
+        <div class="col-sm-6 col-xl-3">
+            <div class="summary-card h-100">
+                <div class="summary-icon summary-icon-blue">👥</div>
+                <p class="summary-label">Total clients</p>
+                <p class="summary-value">@Model.TotalClients</p>
+                <p class="summary-note">Active in your database</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="summary-card h-100">
+                <div class="summary-icon summary-icon-green">✦</div>
+                <p class="summary-label">Added this month</p>
+                <p class="summary-value">@Model.ClientsAddedThisMonth</p>
+                <p class="summary-note">New client registrations</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="summary-card h-100">
+                <div class="summary-icon summary-icon-teal">⌁</div>
+                <p class="summary-label">Average weight</p>
+                <p class="summary-value">@Model.AverageClientWeight.ToString("0.0") <span>kg</span></p>
+                <p class="summary-note">Across all clients</p>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="summary-card h-100">
+                <div class="summary-icon summary-icon-lime">◎</div>
+                <p class="summary-label">Fitness goals</p>
+                <p class="summary-value">@Model.FitnessGoalCount</p>
+                <p class="summary-note">Unique goals being tracked</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="dashboard-panel h-100">
+                <div class="panel-heading">
+                    <div>
+                        <p class="section-kicker">CLIENT ACTIVITY</p>
+                        <h2 class="h4 mb-0">Recent Clients</h2>
+                    </div>
+                    <a asp-controller="Clients" asp-action="Index" class="btn btn-sm btn-outline-primary">View all</a>
+                </div>
+
+                @if (Model.RecentClients.Count == 0)
+                {
+                    <div class="empty-state">
+                        <p class="mb-2">No clients have been added yet.</p>
+                        <a asp-controller="Clients" asp-action="Create" class="btn btn-sm btn-primary">Add your first client</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table dashboard-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Goal</th>
+                                    <th>Joined</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var client in Model.RecentClients)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="client-cell">
+                                                <span class="client-avatar">@client.FullName[..1].ToUpperInvariant()</span>
+                                                <span>
+                                                    <strong class="d-block">@client.FullName</strong>
+                                                    <small class="text-muted">@client.Age years · @client.Gender</small>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>@client.FitnessGoal</td>
+                                        <td>@client.DateJoined.ToString("d")</td>
+                                        <td class="text-end">
+                                            <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.Id" class="btn btn-sm btn-light">View</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <section class="dashboard-panel quick-actions h-100">
+                <p class="section-kicker">GET STARTED</p>
+                <h2 class="h4 mb-3">Quick actions</h2>
+                <div class="d-grid gap-2">
+                    <a asp-controller="Clients" asp-action="Create" class="btn btn-primary quick-action">＋ Add New Client</a>
+                    <a asp-controller="Clients" asp-action="Index" class="btn btn-outline-primary quick-action">▦ View All Clients</a>
+                    <a asp-controller="WorkoutPrograms" asp-action="Create" class="btn btn-outline-primary quick-action">＋ Add Workout Program</a>
+                    <a asp-controller="ProgressRecords" asp-action="Create" class="btn btn-outline-primary quick-action">↗ Record Progress</a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+@model FitTrack.Models.WorkoutProgram
+
+@{
+    ViewData["Title"] = "Workout Program Details";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <h1>Workout Program Details</h1>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Programs</a>
+    </div>
+</div>
+
+<div class="details-card card">
+    <div class="card-body">
+        <h2 class="h4">@Model.ProgramName</h2>
+        <p class="text-muted">@Model.Description</p>
+        <dl class="row mb-0">
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Client)</dt>
+            <dd class="col-sm-8">@Model.Client?.FullName</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DifficultyLevel)</dt>
+            <dd class="col-sm-8">@Model.DifficultyLevel</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(model => model.DurationWeeks)</dt>
+            <dd class="col-sm-8">@Model.DurationWeeks weeks</dd>
+        </dl>
+    </div>
+</div>

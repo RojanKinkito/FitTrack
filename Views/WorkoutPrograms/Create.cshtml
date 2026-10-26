@@ -1,0 +1,52 @@
+@model FitTrack.Models.WorkoutProgram
+
+@{
+    ViewData["Title"] = "Create Workout Program";
+}
+
+<h1>Create Workout Program</h1>
+<p class="text-muted">Create a structured program and assign it to a client.</p>
+
+<form asp-action="Create" method="post" class="app-form row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="col-md-6">
+        <label asp-for="ProgramName" class="form-label"></label>
+        <input asp-for="ProgramName" class="form-control" />
+        <span asp-validation-for="ProgramName" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="ClientId" class="form-label"></label>
+        <select asp-for="ClientId" asp-items="ViewBag.Clients" class="form-select">
+            <option value="">-- Select a client --</option>
+        </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the focus of this program"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="DifficultyLevel" class="form-label"></label>
+        <select asp-for="DifficultyLevel" class="form-select">
+            <option value="">-- Select difficulty --</option>
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+        </select>
+        <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="DurationWeeks" class="form-label"></label>
+        <input asp-for="DurationWeeks" class="form-control" type="number" min="1" max="52" />
+        <span asp-validation-for="DurationWeeks" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Create Program</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

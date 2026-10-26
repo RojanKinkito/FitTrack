@@ -1,0 +1,23 @@
+@model FitTrack.Models.ProgressRecord
+
+@{
+    ViewData["Title"] = "Delete Progress Record";
+}
+
+<div class="page-header mb-4"><p class="section-kicker mb-1">PROGRESS TRACKING</p><h1>Delete Progress Record</h1></div>
+<div class="alert alert-warning" role="alert">
+    Are you sure you want to delete this progress record? This action cannot be undone.
+</div>
+
+<div class="details-card card mb-4">
+    <div class="card-body">
+        <h2 class="h4">@Model.Client?.FullName</h2>
+        <p class="mb-0">@Model.Weight kg · @Model.BodyFatPercentage% body fat · @Model.RecordDate.ToString("d")</p>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete Record</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

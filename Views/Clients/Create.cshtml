@@ -1,0 +1,92 @@
+@model FitTrack.Models.Client
+
+@{
+    ViewData["Title"] = "Create Client";
+}
+
+<h1>Create Client</h1>
+<p class="text-muted">Add a new client to FitTrack.</p>
+
+<form asp-action="Create" method="post" class="app-form row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+    <div class="col-md-6">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Age" class="form-label"></label>
+        <input asp-for="Age" class="form-control" type="number" min="1" max="120" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <input asp-for="Gender" class="form-control" />
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Weight" class="form-label"></label>
+        <input asp-for="Weight" class="form-control" type="number" min="1" max="500" step="0.01" />
+        <span asp-validation-for="Weight" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Height" class="form-label"></label>
+        <input asp-for="Height" class="form-control" type="number" min="30" max="250" step="0.01" />
+        <span asp-validation-for="Height" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <div id="bmiPreview" class="bmi-preview" aria-live="polite">
+            <span class="bmi-preview-label">BMI preview</span>
+            <strong id="bmiPreviewValue">Enter a valid weight and height</strong>
+            <span id="bmiPreviewCategory" class="badge text-bg-secondary d-none"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="FitnessGoal" class="form-label"></label>
+        <input asp-for="FitnessGoal" class="form-control" />
+        <span asp-validation-for="FitnessGoal" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="DateJoined" class="form-label"></label>
+        <input asp-for="DateJoined" class="form-control" type="date" />
+        <span asp-validation-for="DateJoined" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Create Client</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const weightInput = document.getElementById('Weight');
+            const heightInput = document.getElementById('Height');
+            const valueElement = document.getElementById('bmiPreviewValue');
+            const categoryElement = document.getElementById('bmiPreviewCategory');
+
+            function updateBmiPreview() {
+                const weight = Number.parseFloat(weightInput.value);
+                const heightInMeters = Number.parseFloat(heightInput.value) / 100;
+
+                if (!Number.isFinite(weight) || !Number.isFinite(heightInMeters) || weight <= 0 || heightInMeters <= 0) {
+                    valueElement.textContent = 'Enter a valid weight and height';
+                    categoryElement.textContent = '';
+                    categoryElement.classList.add('d-none');
+                    return;
+                }
+
+                const bmi = weight / (heightInMeters * heightInMeters);
+                const category = bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal weight' : bmi < 30 ? 'Overweight' : 'Obesity';
+                valueElement.textContent = bmi.toFixed(1);
+                categoryElement.textContent = category;
+                categoryElement.classList.remove('d-none');
+            }
+
+            weightInput.addEventListener('input', updateBmiPreview);
+            heightInput.addEventListener('input', updateBmiPreview);
+            updateBmiPreview();
+        })();
+    </script>
+}

@@ -1,0 +1,25 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="status-page">
+    <div class="status-icon status-icon-danger mb-3" aria-hidden="true">!</div>
+    <p class="section-kicker">FITTRACK</p>
+    <h1 class="h2 mb-2">Something went wrong</h1>
+    <p class="text-muted mb-4">We could not complete that request. Please try again or return to the dashboard.</p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to dashboard</a>
+
+    @if (Model.ShowRequestId)
+    {
+        <p class="small text-muted mt-4 mb-0"><strong>Request ID:</strong> <code>@Model.RequestId</code></p>
+    }
+
+    @if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+    {
+        <details class="text-start mt-4">
+            <summary class="small fw-semibold">Development details</summary>
+            <p class="small text-muted mt-2 mb-0">Detailed exception information is available in the local development logs.</p>
+        </details>
+    }
+</div>
