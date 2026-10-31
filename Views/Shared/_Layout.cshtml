@@ -1,16 +1,38 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    string ActiveFor(string controller, string? action = null) =>
+        currentController == controller && (action == null || currentAction == action) ? "active" : "";
+    string? CurrentFor(string controller, string? action = null) =>
+        ActiveFor(controller, action) == "active" ? "page" : null;
+    var userName = User.Identity?.Name ?? string.Empty;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07090c" />
+    <meta name="color-scheme" content="dark" />
     <title>@ViewData["Title"] - FitTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FitTrack.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="fit-progress" aria-hidden="true"></div>
+    <div class="fit-backdrop" aria-hidden="true">
+        <span class="fit-orb fit-orb-1"></span>
+        <span class="fit-orb fit-orb-2"></span>
+        <span class="fit-orb fit-orb-3"></span>
+    </div>
+
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark fittrack-nav mb-4" aria-label="Primary navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark fittrack-nav" aria-label="Primary navigation">
             <div class="container-fluid">
                 <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
                     <span class="brand-mark" aria-hidden="true">F</span>
@@ -20,52 +42,76 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ms-lg-4">
                         <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index" aria-current="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "page" : null)">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Privacy" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link @ActiveFor("Home", "Index")" aria-current="@CurrentFor("Home", "Index")" asp-area="" asp-controller="Home" asp-action="Index">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" /></svg>
+                                Home
+                            </a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Clients" ? "active" : "")" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                                <a class="nav-link @ActiveFor("Clients")" aria-current="@CurrentFor("Clients")" asp-area="" asp-controller="Clients" asp-action="Index">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                                    Clients
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "WorkoutPrograms" ? "active" : "")" asp-area="" asp-controller="WorkoutPrograms" asp-action="Index">Workout Programs</a>
+                                <a class="nav-link @ActiveFor("WorkoutPrograms")" aria-current="@CurrentFor("WorkoutPrograms")" asp-area="" asp-controller="WorkoutPrograms" asp-action="Index">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11" /></svg>
+                                    Workout Programs
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProgressRecords" ? "active" : "")" asp-area="" asp-controller="ProgressRecords" asp-action="Index">Progress Tracking</a>
+                                <a class="nav-link @ActiveFor("ProgressRecords")" aria-current="@CurrentFor("ProgressRecords")" asp-area="" asp-controller="ProgressRecords" asp-action="Index">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8" /><path d="M14 7h7v7" /></svg>
+                                    Progress Tracking
+                                </a>
                             </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "UserManagement" ? "active" : "")" asp-controller="UserManagement" asp-action="Index">User Management</a>
+                                    <a class="nav-link @ActiveFor("UserManagement")" aria-current="@CurrentFor("UserManagement")" asp-controller="UserManagement" asp-action="Index">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                                        User Management
+                                    </a>
                                 </li>
                             }
                         }
+                        <li class="nav-item">
+                            <a class="nav-link @ActiveFor("Home", "Privacy")" aria-current="@CurrentFor("Home", "Privacy")" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+                                Privacy
+                            </a>
+                        </li>
                     </ul>
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav align-items-lg-center">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <span class="nav-link user-chip"><span class="status-dot" aria-hidden="true"></span>@User.Identity.Name</span>
+                                <span class="user-chip" title="@userName">
+                                    <span class="user-chip-avatar" aria-hidden="true">@(userName.Length > 0 ? userName[..1] : "?")<span class="status-dot"></span></span>
+                                    <span class="user-chip-name">@userName</span>
+                                </span>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button type="submit" class="nav-link btn btn-link">Logout</button>
+                                    <button type="submit" class="nav-link btn btn-link">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /></svg>
+                                        Logout
+                                    </button>
                                 </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link @ActiveFor("Account", "Login")" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link nav-cta" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="nav-link nav-cta" asp-controller="Account" asp-action="Register">Get started</a>
                             </li>
                         }
                     </ul>
@@ -73,15 +119,23 @@
             </div>
         </nav>
     </header>
+
     <div class="container app-container">
-        <main role="main" class="pb-4">
+        <main role="main" id="main-content" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - FitTrack - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="footer-brand">
+                <span class="brand-mark" aria-hidden="true"></span>
+                &copy; 2026 FitTrack · Performance OS
+            </span>
+            <nav class="footer-links" aria-label="Footer">
+                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </nav>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

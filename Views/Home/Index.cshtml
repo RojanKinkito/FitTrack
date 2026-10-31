@@ -21,7 +21,7 @@
     <section class="row g-3 mb-4" aria-label="Dashboard summary">
         <div class="col-sm-6 col-xl-3">
             <div class="summary-card h-100">
-                <div class="summary-icon summary-icon-blue">👥</div>
+                <div class="summary-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
                 <p class="summary-label">Total clients</p>
                 <p class="summary-value">@Model.TotalClients</p>
                 <p class="summary-note">Active in your database</p>
@@ -29,7 +29,7 @@
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="summary-card h-100">
-                <div class="summary-icon summary-icon-green">✦</div>
+                <div class="summary-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div>
                 <p class="summary-label">Added this month</p>
                 <p class="summary-value">@Model.ClientsAddedThisMonth</p>
                 <p class="summary-note">New client registrations</p>
@@ -37,7 +37,7 @@
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="summary-card h-100">
-                <div class="summary-icon summary-icon-teal">⌁</div>
+                <div class="summary-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
                 <p class="summary-label">Average weight</p>
                 <p class="summary-value">@Model.AverageClientWeight.ToString("0.0") <span>kg</span></p>
                 <p class="summary-note">Across all clients</p>
@@ -45,7 +45,7 @@
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="summary-card h-100">
-                <div class="summary-icon summary-icon-lime">◎</div>
+                <div class="summary-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div>
                 <p class="summary-label">Fitness goals</p>
                 <p class="summary-value">@Model.FitnessGoalCount</p>
                 <p class="summary-note">Unique goals being tracked</p>

@@ -97,12 +97,31 @@
             const chartLabels = @Html.Raw(chartLabels);
             const weightData = @Html.Raw(weightData);
             const bodyFatData = @Html.Raw(bodyFatData);
-            const chartGridColor = 'rgba(100, 120, 139, 0.15)';
-            const chartTextColor = '#64788b';
+            const chartGridColor = 'rgba(255, 255, 255, 0.06)';
+            const chartTextColor = '#7f8b98';
+
+            Chart.defaults.font.family = '"Inter", ui-sans-serif, system-ui, sans-serif';
+            Chart.defaults.color = chartTextColor;
+
+            // Vertical fade under each line, sized to the chart area once it is known.
+            const areaGradient = (rgb) => ({ chart }) => {
+                const { ctx, chartArea } = chart;
+                if (!chartArea) {
+                    return `rgba(${rgb}, 0.15)`;
+                }
+                const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                gradient.addColorStop(0, `rgba(${rgb}, 0.35)`);
+                gradient.addColorStop(1, `rgba(${rgb}, 0)`);
+                return gradient;
+            };
 
             const chartOptions = {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900,
+                    easing: 'easeOutQuart'
+                },
                 interaction: {
                     intersect: false,
                     mode: 'index'
@@ -110,33 +129,52 @@
                 scales: {
                     x: {
                         grid: { display: false },
-                        ticks: { color: chartTextColor }
+                        border: { display: false },
+                        ticks: { color: chartTextColor, maxRotation: 0, autoSkipPadding: 16 }
                     },
                     y: {
                         beginAtZero: false,
                         grid: { color: chartGridColor },
-                        ticks: { color: chartTextColor }
+                        border: { display: false },
+                        ticks: { color: chartTextColor, padding: 8 }
                     }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(13, 17, 22, 0.95)',
+                        borderColor: 'rgba(255, 106, 0, 0.35)',
+                        borderWidth: 1,
+                        titleColor: '#f5f7fa',
+                        bodyColor: '#b4bdc8',
+                        padding: 12,
+                        cornerRadius: 10,
+                        displayColors: false
+                    }
                 }
             };
+
+            const lineDataset = (label, data, hex, rgb) => ({
+                label,
+                data,
+                borderColor: hex,
+                borderWidth: 2.5,
+                backgroundColor: areaGradient(rgb),
+                fill: true,
+                tension: 0.35,
+                pointBackgroundColor: '#0d1116',
+                pointBorderColor: hex,
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: hex
+            });
 
             new Chart(document.getElementById('weightChart'), {
                 type: 'line',
                 data: {
                     labels: chartLabels,
-                    datasets: [{
-                        label: 'Weight (kg)',
-                        data: weightData,
-                        borderColor: '#198754',
-                        backgroundColor: 'rgba(25, 135, 84, 0.12)',
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#198754',
-                        pointRadius: 4
-                    }]
+                    datasets: [lineDataset('Weight (kg)', weightData, '#ff8a1f', '255, 138, 31')]
                 },
                 options: chartOptions
             });
@@ -145,16 +183,7 @@
                 type: 'line',
                 data: {
                     labels: chartLabels,
-                    datasets: [{
-                        label: 'Body fat (%)',
-                        data: bodyFatData,
-                        borderColor: '#174d80',
-                        backgroundColor: 'rgba(23, 77, 128, 0.12)',
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#174d80',
-                        pointRadius: 4
-                    }]
+                    datasets: [lineDataset('Body fat (%)', bodyFatData, '#5cb8ff', '92, 184, 255')]
                 },
                 options: chartOptions
             });
