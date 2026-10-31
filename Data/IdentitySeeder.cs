@@ -23,11 +23,8 @@ public static class IdentitySeeder
             }
         }
 
-        if (!environment.IsDevelopment())
-        {
-            return;
-        }
-
+        // Optional: set these on the host (e.g. Render) so an admin login survives restarts
+        // of a disposable database.
         var adminEmail = Environment.GetEnvironmentVariable("FITTRACK_ADMIN_EMAIL");
         var adminPassword = Environment.GetEnvironmentVariable("FITTRACK_ADMIN_PASSWORD");
 

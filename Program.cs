@@ -57,26 +57,10 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    // This portfolio demo uses disposable SQLite storage on Render.
-    // Recreate it on startup so failed deploys cannot leave a partial schema behind.
-    await db.Database.EnsureDeletedAsync();
     await db.Database.EnsureCreatedAsync();
-    await db.Database.ExecuteSqlRawAsync("""
-        CREATE TABLE IF NOT EXISTS "AspNetRoles" (
-            "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetRoles" PRIMARY KEY,
-            "Name" TEXT NULL,
-            "NormalizedName" TEXT NULL,
-            "ConcurrencyStamp" TEXT NULL
-        );
-        CREATE UNIQUE INDEX IF NOT EXISTS "RoleNameIndex"
-            ON "AspNetRoles" ("NormalizedName");
-        """);
 }
 
-if (app.Environment.IsDevelopment())
-{
-    await IdentitySeeder.SeedAsync(app.Services, app.Environment);
-}
+await IdentitySeeder.SeedAsync(app.Services, app.Environment);
 
 if (app.Environment.IsDevelopment())
 {
