@@ -73,7 +73,10 @@ using (var scope = app.Services.CreateScope())
         """);
 }
 
-await IdentitySeeder.SeedAsync(app.Services, app.Environment);
+if (app.Environment.IsDevelopment())
+{
+    await IdentitySeeder.SeedAsync(app.Services, app.Environment);
+}
 
 if (app.Environment.IsDevelopment())
 {

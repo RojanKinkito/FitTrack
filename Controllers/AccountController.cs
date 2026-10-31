@@ -43,7 +43,6 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "Trainer");
             await _signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToLocal(returnUrl);
         }
