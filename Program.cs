@@ -57,6 +57,25 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Render may retain a partially initialized demo database after a failed deploy.
+    // Recreate it when the Identity schema is missing so startup can recover cleanly.
+    var connection = db.Database.GetDbConnection();
+    await connection.OpenAsync();
+    var hasIdentitySchema = false;
+    await using (var command = connection.CreateCommand())
+    {
+        command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'AspNetRoles';";
+        hasIdentitySchema = Convert.ToInt32(await command.ExecuteScalarAsync()) > 0;
+    }
+
+    await connection.CloseAsync();
+
+    if (!hasIdentitySchema)
+    {
+        await db.Database.EnsureDeletedAsync();
+    }
+
     await db.Database.EnsureCreatedAsync();
 }
 
