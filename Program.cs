@@ -61,6 +61,16 @@ using (var scope = app.Services.CreateScope())
     // Recreate it on startup so failed deploys cannot leave a partial schema behind.
     await db.Database.EnsureDeletedAsync();
     await db.Database.EnsureCreatedAsync();
+    await db.Database.ExecuteSqlRawAsync("""
+        CREATE TABLE IF NOT EXISTS "AspNetRoles" (
+            "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetRoles" PRIMARY KEY,
+            "Name" TEXT NULL,
+            "NormalizedName" TEXT NULL,
+            "ConcurrencyStamp" TEXT NULL
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS "RoleNameIndex"
+            ON "AspNetRoles" ("NormalizedName");
+        """);
 }
 
 await IdentitySeeder.SeedAsync(app.Services, app.Environment);
